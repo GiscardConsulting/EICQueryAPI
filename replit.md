@@ -2,9 +2,14 @@
 
 A minimalist REST API for querying ENTSOE EIC codes with automated refresh and persistent storage.
 
+## Quick Start
+
+**View Interactive Documentation:** Navigate to the root URL (`/`) in your browser for complete API documentation with examples.
+
 ## Overview
 
 This service provides fast querying of European Energy Identification Codes (EIC) from ENTSOE, with:
+- **Interactive HTML documentation** at the root path
 - PostgreSQL database for persistent storage
 - Automated CSV refresh every 15 minutes
 - eTag-based conditional requests (only downloads when data changes)
@@ -38,12 +43,17 @@ This service provides fast querying of European Energy Identification Codes (EIC
 - Prevents concurrent refresh operations
 
 **API Routes** (`server/routes.ts`):
+- `GET /` - Interactive API documentation (HTML)
 - `GET /api/eic/:code` - Query by exact EIC code
 - `GET /api/eic/search?name=X` - Search by name (case-insensitive)
 - `GET /api/status` - Health check and system status
 - `POST /api/refresh` - Trigger manual refresh
 
 ## API Documentation
+
+**📚 For full interactive documentation, visit the root URL (`/`) in your browser.**
+
+The following is a quick reference guide:
 
 ### Query by EIC Code
 
@@ -184,12 +194,16 @@ https://eepublicdownloads.blob.core.windows.net/cio-lio/csv/X_eicCodes.csv
 
 ## Recent Changes
 
+- **Nov 12, 2025** - Added interactive HTML documentation at root path
+  - Dynamic base URL generation for deployment compatibility
+  - Professional styling with syntax-highlighted examples
+  - Complete endpoint reference with request/response samples
 - Initial implementation (Nov 12, 2025)
-- Database schema with eic_codes and refresh_metadata tables
-- CSV refresh service with eTag optimization
-- API endpoints for code lookup, name search, and status
-- Automated 15-minute refresh schedule
-- Manual refresh endpoint
+  - Database schema with eic_codes and refresh_metadata tables
+  - CSV refresh service with eTag optimization
+  - API endpoints for code lookup, name search, and status
+  - Automated 15-minute refresh schedule
+  - Manual refresh endpoint
 
 ## Future Enhancements
 
