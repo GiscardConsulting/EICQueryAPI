@@ -74,17 +74,6 @@ function generateApiDocs(baseUrl: string): string {
   <div class="container">
     <div class="content">
       <section>
-        <h2>Overview</h2>
-        <p>This API provides access to 14,000+ European Energy Identification Codes (EIC) from ENTSOE. The data is automatically synchronized every 15 minutes with intelligent caching to minimize bandwidth usage.</p>
-        
-        <div class="info-box">
-          <strong>Base URL:</strong> <code>${baseUrl}</code><br>
-          <strong>Data Source:</strong> ENTSOE X_eicCodes.csv<br>
-          <strong>Auto-Refresh:</strong> Every 15 minutes with eTag optimization
-        </div>
-      </section>
-
-      <section>
         <h2>Endpoints</h2>
 
         <div class="endpoint">
@@ -223,22 +212,6 @@ function generateApiDocs(baseUrl: string): string {
           <tr><td>type</td><td>EIC type indicator</td></tr>
         </table>
       </section>
-
-      <section>
-        <h2>Features</h2>
-        <ul style="list-style-position: inside; margin: 1rem 0;">
-          <li>✓ Persistent PostgreSQL storage</li>
-          <li>✓ Automated refresh every 15 minutes</li>
-          <li>✓ eTag-based conditional requests (bandwidth optimization)</li>
-          <li>✓ Fast case-insensitive search</li>
-          <li>✓ Real-time system status monitoring</li>
-          <li>✓ Manual refresh capability</li>
-        </ul>
-      </section>
-    </div>
-
-    <div class="footer">
-      <p>EIC Code API v1.0 | Data from ENTSOE | Updated every 15 minutes</p>
     </div>
   </div>
 </body>
