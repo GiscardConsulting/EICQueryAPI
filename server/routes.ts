@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { eicRefreshService } from "./eicRefreshService";
 
-function generateApiDocs(baseUrl: string): string {
+function generateApiDocs(baseUrl: string, lastRefresh: string | null): string {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,6 +73,17 @@ function generateApiDocs(baseUrl: string): string {
 
   <div class="container">
     <div class="content">
+      ${lastRefresh ? `<div class="info-box" style="margin-bottom: 2rem;">
+        <strong>Last Data Refresh:</strong> ${new Date(lastRefresh).toLocaleString('en-US', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric', 
+          hour: '2-digit', 
+          minute: '2-digit',
+          second: '2-digit',
+          timeZoneName: 'short'
+        })}
+      </div>` : ''}
       <section>
         <h2>Endpoints</h2>
 
@@ -162,27 +173,6 @@ function generateApiDocs(baseUrl: string): string {
   }
 }</pre>
         </div>
-
-        <div class="endpoint">
-          <h3><span class="method post">POST</span><span class="path">/api/refresh</span></h3>
-          <p>Manually trigger data refresh from ENTSOE source.</p>
-
-          <h4>Example Request</h4>
-<pre>curl -X POST ${baseUrl}/api/refresh</pre>
-
-          <h4>Example Response (no changes)</h4>
-<pre>{
-  "success": true,
-  "message": "Data is up to date (no changes detected)"
-}</pre>
-
-          <h4>Example Response (updated)</h4>
-<pre>{
-  "success": true,
-  "message": "Data refreshed successfully",
-  "recordsProcessed": 14481
-}</pre>
-        </div>
       </section>
 
       <section>
@@ -219,10 +209,11 @@ function generateApiDocs(baseUrl: string): string {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  app.get("/", (req, res) => {
+  app.get("/", async (req, res) => {
     const baseUrl = `${req.protocol}://${req.get('host')}`;
+    const metadata = await storage.getRefreshMetadata();
     res.setHeader("Content-Type", "text/html");
-    res.send(generateApiDocs(baseUrl));
+    res.send(generateApiDocs(baseUrl, metadata?.lastRefresh?.toISOString() || null));
   });
 
   app.get("/api/eic/search", async (req, res) => {
