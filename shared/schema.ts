@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -21,7 +21,7 @@ export const refreshMetadata = pgTable("refresh_metadata", {
   id: varchar("id").primaryKey().default("eic_csv"),
   etag: text("etag"),
   lastRefresh: timestamp("last_refresh", { withTimezone: true }),
-  totalRecords: sql<number>`integer`.default(0),
+  totalRecords: integer("total_records").default(0),
 });
 
 export const insertEicCodeSchema = createInsertSchema(eicCodes);

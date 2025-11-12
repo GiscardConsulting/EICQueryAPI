@@ -4,6 +4,32 @@ import { storage } from "./storage";
 import { eicRefreshService } from "./eicRefreshService";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  app.get("/api/eic/search", async (req, res) => {
+    try {
+      const { name } = req.query;
+      
+      if (!name || typeof name !== "string") {
+        return res.status(400).json({ error: "Search parameter 'name' is required" });
+      }
+
+      const results = await storage.searchEicByName(name);
+      const metadata = await storage.getRefreshMetadata();
+
+      return res.json({
+        data: results,
+        metadata: {
+          lastRefresh: metadata?.lastRefresh,
+          totalRecords: metadata?.totalRecords,
+          matchCount: results.length,
+          query: name,
+        },
+      });
+    } catch (error) {
+      console.error("Error searching EIC codes:", error);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
   app.get("/api/eic/:code", async (req, res) => {
     try {
       const { code } = req.params;
@@ -29,32 +55,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Error fetching EIC code:", error);
-      return res.status(500).json({ error: "Internal server error" });
-    }
-  });
-
-  app.get("/api/eic/search", async (req, res) => {
-    try {
-      const { name } = req.query;
-      
-      if (!name || typeof name !== "string") {
-        return res.status(400).json({ error: "Search parameter 'name' is required" });
-      }
-
-      const results = await storage.searchEicByName(name);
-      const metadata = await storage.getRefreshMetadata();
-
-      return res.json({
-        data: results,
-        metadata: {
-          lastRefresh: metadata?.lastRefresh,
-          totalRecords: metadata?.totalRecords,
-          matchCount: results.length,
-          query: name,
-        },
-      });
-    } catch (error) {
-      console.error("Error searching EIC codes:", error);
       return res.status(500).json({ error: "Internal server error" });
     }
   });
