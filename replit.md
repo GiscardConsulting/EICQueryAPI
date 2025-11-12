@@ -194,10 +194,16 @@ https://eepublicdownloads.blob.core.windows.net/cio-lio/csv/X_eicCodes.csv
 
 ## Recent Changes
 
+- **Nov 12, 2025** - Changed API behavior for not-found scenarios
+  - API now returns HTTP 200 with `{data: null, metadata}` when EIC code not found (instead of 404)
+  - Search endpoint returns HTTP 200 with `{data: [], metadata}` when no matches found
+  - Updated documentation to show both "found" and "not found" examples
+  - Simplified client handling by treating "no results" as successful responses
 - **Nov 12, 2025** - Added interactive HTML documentation at root path
   - Dynamic base URL generation for deployment compatibility
   - Professional styling with syntax-highlighted examples
   - Complete endpoint reference with request/response samples
+  - Last refresh timestamp displayed at top of documentation
 - Initial implementation (Nov 12, 2025)
   - Database schema with eic_codes and refresh_metadata tables
   - CSV refresh service with eTag optimization
