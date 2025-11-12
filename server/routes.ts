@@ -100,7 +100,7 @@ function generateApiDocs(baseUrl: string, lastRefresh: string | null): string {
           <h4>Example Request</h4>
 <pre>curl ${baseUrl}/api/eic/10X1001A1001A094</pre>
 
-          <h4>Example Response</h4>
+          <h4>Example Response (Found)</h4>
 <pre>{
   "data": {
     "eicCode": "10X1001A1001A094",
@@ -113,6 +113,15 @@ function generateApiDocs(baseUrl: string, lastRefresh: string | null): string {
     "eicTypeFunctionList": "System Operator",
     "type": "X"
   },
+  "metadata": {
+    "lastRefresh": "2025-11-12T10:15:52.530Z",
+    "totalRecords": 14481
+  }
+}</pre>
+
+          <h4>Example Response (Not Found)</h4>
+<pre>{
+  "data": null,
   "metadata": {
     "lastRefresh": "2025-11-12T10:15:52.530Z",
     "totalRecords": 14481
@@ -133,7 +142,7 @@ function generateApiDocs(baseUrl: string, lastRefresh: string | null): string {
           <h4>Example Request</h4>
 <pre>curl "${baseUrl}/api/eic/search?name=ELIA"</pre>
 
-          <h4>Example Response</h4>
+          <h4>Example Response (Matches Found)</h4>
 <pre>{
   "data": [
     {
@@ -148,6 +157,17 @@ function generateApiDocs(baseUrl: string, lastRefresh: string | null): string {
     "totalRecords": 14481,
     "matchCount": 14,
     "query": "ELIA"
+  }
+}</pre>
+
+          <h4>Example Response (No Matches)</h4>
+<pre>{
+  "data": [],
+  "metadata": {
+    "lastRefresh": "2025-11-12T10:15:52.530Z",
+    "totalRecords": 14481,
+    "matchCount": 0,
+    "query": "NONEXISTENT"
   }
 }</pre>
         </div>
@@ -176,13 +196,17 @@ function generateApiDocs(baseUrl: string, lastRefresh: string | null): string {
       </section>
 
       <section>
-        <h2>Error Responses</h2>
+        <h2>HTTP Status Codes</h2>
         <table>
           <tr><th>Status Code</th><th>Description</th></tr>
+          <tr><td>200</td><td>Success - Request completed successfully (includes cases where no data is found)</td></tr>
           <tr><td>400</td><td>Bad Request - Missing or invalid parameters</td></tr>
-          <tr><td>404</td><td>Not Found - EIC code does not exist</td></tr>
           <tr><td>500</td><td>Internal Server Error - Server-side error occurred</td></tr>
         </table>
+        <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
+          <strong>Note:</strong> When an EIC code is not found or search returns no matches, 
+          the API returns 200 with <code>data: null</code> or <code>data: []</code> respectively.
+        </p>
       </section>
 
       <section>
@@ -251,15 +275,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const eicCode = await storage.getEicByCode(code);
-      
-      if (!eicCode) {
-        return res.status(404).json({ error: "EIC code not found" });
-      }
-
       const metadata = await storage.getRefreshMetadata();
 
       return res.json({
-        data: eicCode,
+        data: eicCode || null,
         metadata: {
           lastRefresh: metadata?.lastRefresh,
           totalRecords: metadata?.totalRecords,
