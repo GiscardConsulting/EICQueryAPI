@@ -1,0 +1,49 @@
+# Node modules
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Development files
+.git/
+.gitignore
+.env
+.env.local
+.env.*.local
+
+# Build outputs (will be generated during build)
+dist/
+.vite/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Documentation (keep README.md for reference)
+replit.md
+
+# Logs
+logs/
+*.log
+
+# Test files
+*.test.ts
+*.test.js
+__tests__/
+coverage/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Docker files (no need to copy into image)
+Dockerfile
+docker-compose.yml
+.dockerignore

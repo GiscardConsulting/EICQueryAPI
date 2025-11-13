@@ -171,11 +171,35 @@ POST /api/refresh
 - **CSV Parsing:** csv-parser
 - **Validation:** Zod
 
+## Deployment Options
+
+### Replit (Current Environment)
+
+This application is configured to run on Replit with automatic environment setup.
+
+### Docker Deployment
+
+Complete Docker configuration is available for self-hosting:
+
+**Files:**
+- `Dockerfile` - Multi-stage build for production
+- `docker-compose.yml` - PostgreSQL + API service orchestration
+- `.dockerignore` - Optimized build context
+
+**Quick Start:**
+```bash
+docker-compose up -d
+docker-compose exec app npm run db:push
+```
+
+See `README.md` for complete Docker deployment instructions, including database setup, backups, and production configuration.
+
 ## Environment Variables
 
 Required environment variables (automatically configured by Replit):
 - `DATABASE_URL` - PostgreSQL connection string
 - `PORT` - Server port (default: 5000)
+- `SESSION_SECRET` - Session encryption key (auto-generated on Replit)
 
 ## Data Source
 
